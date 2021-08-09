@@ -13,7 +13,7 @@ app.use('/posts', postRoutes);
 
 const CONNECTION_URL =
   'mongodb+srv://Sarthak:D8mGDa2wT7IqoLTt@cluster0.w2o8g.mongodb.net/Memories?retryWrites=true&w=majority';
-const PORT = process.env.port || 8000;
+const PORT = process.env.port || 9000;
 mongoose
   .connect(CONNECTION_URL, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() =>

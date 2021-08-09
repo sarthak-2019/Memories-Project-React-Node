@@ -4,17 +4,14 @@ import memories from "./images/memories.png";
 import Posts from "./components/Posts/Posts";
 import Form from "./components/Form/Form";
 import useStyles from "./styles";
-import { useDipatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import { getPosts } from "./actions/posts";
 const App = () => {
-  const [currentId, setCurrentId] = useState(0);
-  const dispatch = useDispatch();
   const classes = useStyles();
-
+  const dispatch = useDispatch();
   useEffect(() => {
-    dispatch(getPosts());
-  }, [currentId, dispatch]);
-
+    dispatch(getPosts);
+  }, [dispatch]);
   return (
     <Container maxWidth="lg">
       <AppBar className={classes.appBar} position="static" color="inherit">
