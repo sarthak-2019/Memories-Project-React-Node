@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import useStyles from "./styles";
 import { TextField, Button, Typography, Paper } from "@material-ui/core";
 import FileBase from "react-file-base64";
 import { useDispatch } from "react-redux";
-import { createPost } from "./../../actions/posts";
-export default function Form() {
+import { createPost, updatePost } from "./../../actions/posts";
+import { useSelector } from "react-redux";
+export default function Form({ currentId, setcurrentId }) {
   const [postData, setPostData] = useState({
     creator: "",
     title: "",
@@ -12,13 +13,37 @@ export default function Form() {
     tags: "",
     selectedFile: "",
   });
+  const post = useSelector((state) =>
+    currentId ? state.posts.find((message) => message._id === currentId) : null
+  );
   const classes = useStyles();
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (post) setPostData(post);
+  }, [post]);
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    dispatch(createPost(postData));
+
+    if (currentId) {
+      dispatch(updatePost(currentId, postData));
+    } else {
+      dispatch(createPost(postData));
+    }
+    clear();
   };
-  const clear = () => {};
+
+  const clear = () => {
+    setcurrentId(null);
+    setPostData({
+      creator: "",
+      title: "",
+      message: "",
+      tags: "",
+      selectedFile: "",
+    });
+  };
   return (
     <div>
       <Paper className={classes.paper}>
@@ -28,7 +53,9 @@ export default function Form() {
           className={`${classes.root} ${classes.form}`}
           onSubmit={handleSubmit}
         >
-          <Typography variant="h6">Creating a Memory</Typography>
+          <Typography variant="h6">
+            {currentId ? "Editing" : "Creating"} a Memory
+          </Typography>
           <TextField
             name="creator"
             variant="outlined"
@@ -67,7 +94,9 @@ export default function Form() {
             label="Tags (coma separated)"
             fullWidth
             value={postData.tags}
-            onChange={(e) => setPostData({ ...postData, tags: e.target.value })}
+            onChange={(e) =>
+              setPostData({ ...postData, tags: e.target.value.split(",") })
+            }
           />
           <div className={classes.fileInput}>
             <FileBase
