@@ -14,12 +14,21 @@ import { GoogleLogin } from "react-google-login";
 import Icon from "./icon";
 import { useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
+import { signin, signup } from "../../actions/auth";
+const initialState = {
+  firstName: "",
+  lastName: "",
+  email: "",
+  password: "",
+  confirmPassword: "",
+};
 const Auth = () => {
   const history = useHistory();
   const dispatch = useDispatch();
   const classes = useStyles();
   const [isSignup, setIsSignup] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [formData, setFormData] = useState(initialState);
 
   const googleSuccess = async (res) => {
     const result = res?.profileObj;
@@ -44,8 +53,17 @@ const Auth = () => {
     setShowPassword(false);
   };
 
-  const handleSubmit = () => {};
-  const handleChange = () => {};
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (isSignup) {
+      dispatch(signup(formData, history));
+    } else {
+    }
+    dispatch(signin(formData, history));
+  };
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
   return (
     <Container component="main" maxWidth="xs">
       <Paper className={classes.paper} elevation={3}>
